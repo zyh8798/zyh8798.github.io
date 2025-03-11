@@ -1,0 +1,26 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "喜欢下雨,喜欢美少女",
+    "home_page_url": "https://valaxy.site/",
+    "feed_url": "https://valaxy.site/feed.json",
+    "description": "讨厌争论,讨厌不平等",
+    "icon": "http://p1.music.126.net/eqFT_tSXob5r3E8LHtQVmg==/109951169774542338.jpg?param=180y180",
+    "author": {
+        "name": "朱英豪",
+        "url": "https://valaxy.site"
+    },
+    "items": [
+        {
+            "id": "",
+            "content_html": "<h2>Valaxy</h2>\n<p>面试题面试题面试题面试题面试题面试题面试题</p>\n<h2>Usage</h2>\n<p>Modify <code>valaxy.config.ts</code> to custom your blog.</p>\n<br/><p>访问 <a href=\"https://valaxy.site/posts/hello-valaxy\" target=\"_blank\">https://valaxy.site/posts/hello-valaxy</a> 阅读全文。</p>",
+            "url": "https://valaxy.site/posts/hello-valaxy",
+            "title": "面试题",
+            "date_modified": "2025-03-10T00:00:00.000Z",
+            "date_published": "2025-03-10T00:00:00.000Z",
+            "author": {
+                "name": "朱英豪",
+                "url": "https://valaxy.site"
+            }
+        }
+    ]
+}
