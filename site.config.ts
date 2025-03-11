@@ -3,11 +3,13 @@ import { defineSiteConfig } from 'valaxy'
 export default defineSiteConfig({
   url: 'https://valaxy.site/',
   lang: 'zh-CN',
-  title: '操所有人',
+  title: '喜欢下雨,喜欢美少女',
   author: {
     name: '朱英豪',
+    avatar:'http://p1.music.126.net/eqFT_tSXob5r3E8LHtQVmg==/109951169774542338.jpg?param=180y180'
   },
-  description: '喜欢美少女喜欢下雨',
+  description: '讨厌争论,讨厌不平等',
+  subtitle:'日记散播负能量',
   social: [
     // {
     //   name: 'RSS',
@@ -23,7 +25,7 @@ export default defineSiteConfig({
     // },
     {
       name: 'GitHub',
-      link: 'https://github.com/YunYouJun',
+      link: 'https://github.com/zyh8798',
       icon: 'i-ri-github-line',
       color: '#6e5494',
     },
@@ -41,7 +43,7 @@ export default defineSiteConfig({
     // },
     {
       name: '网易云音乐',
-      link: 'https://music.163.com/#/user/home?id=247102977',
+      link: 'https://music.163.com/#/user/home?id=333104851',
       icon: 'i-ri-netease-cloud-music-line',
       color: '#C20C0C',
     },
@@ -53,7 +55,7 @@ export default defineSiteConfig({
     // },
     {
       name: '哔哩哔哩',
-      link: 'https://space.bilibili.com/1579790',
+      link: 'https://space.bilibili.com/33118267?spm_id_from=333.1007.0.0',
       icon: 'i-ri-bilibili-line',
       color: '#FF8EB3',
     },

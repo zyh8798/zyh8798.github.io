@@ -17,7 +17,7 @@ export default defineValaxyConfig<UserThemeConfig>({
   themeConfig: {
     banner: {
       enable: true,
-      title: '我是朱英豪',
+      title: '哈喽哈喽',
     },
 
     pages: [
