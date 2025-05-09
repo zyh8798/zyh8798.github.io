@@ -6,7 +6,10 @@ export default defineSiteConfig({
   title: '喜欢下雨,喜欢美少女',
   author: {
     name: '朱英豪',
-    avatar:'http://p1.music.126.net/eqFT_tSXob5r3E8LHtQVmg==/109951169774542338.jpg?param=180y180'
+    avatar:'http://p1.music.126.net/eqFT_tSXob5r3E8LHtQVmg==/109951169774542338.jpg?param=180y180',
+    status:{
+      emoji:'🌈',
+    }
   },
   description: '讨厌争论,讨厌不平等',
   subtitle:'日记散播负能量',
