@@ -11,7 +11,9 @@ const safelist = [
  */
 export default defineValaxyConfig<UserThemeConfig>({
   // site config see site.config.ts
-
+ markdown: {
+    breaks: true // 自动软换行
+  },
   theme: 'yun',
 
   themeConfig: {
