@@ -1,0 +1,1 @@
+[{"title":"面试题","tags":["面试题"],"categories":["面试题"],"author":"朱英豪","excerpt":"\n## vue的响应式原理\nvue2的响应式原理就是使用object.defineProprty()来劫持对象属性的getter和setter，当数据变化时，触发setter，通过dep.notify","link":"/posts/hello-valaxy"}]

@@ -1,0 +1,26 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "喜欢下雨,喜欢美少女",
+    "home_page_url": "https://valaxy.site/",
+    "feed_url": "https://valaxy.site/feed.json",
+    "description": "讨厌争论,讨厌不平等",
+    "icon": "http://p1.music.126.net/eqFT_tSXob5r3E8LHtQVmg==/109951169774542338.jpg?param=180y180",
+    "author": {
+        "name": "朱英豪",
+        "url": "https://valaxy.site"
+    },
+    "items": [
+        {
+            "id": "",
+            "content_html": "<h2>vue的响应式原理</h2>\n<p>vue2的响应式原理就是使用object.defineProprty()来劫持对象属性的getter和setter，当数据变化时，触发setter，通过dep.notify</p>\n<br/><p>访问 <a href=\"https://valaxy.site/posts/hello-valaxy\" target=\"_blank\">https://valaxy.site/posts/hello-valaxy</a> 阅读全文。</p>",
+            "url": "https://valaxy.site/posts/hello-valaxy",
+            "title": "面试题",
+            "date_modified": "2025-03-10T00:00:00.000Z",
+            "date_published": "2025-03-10T00:00:00.000Z",
+            "author": {
+                "name": "朱英豪",
+                "url": "https://valaxy.site"
+            }
+        }
+    ]
+}
