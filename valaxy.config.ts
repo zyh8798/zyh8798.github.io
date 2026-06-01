@@ -11,15 +11,21 @@ const safelist = [
  */
 export default defineValaxyConfig<UserThemeConfig>({
   // site config see site.config.ts
- markdown: {
-    breaks: true // 自动软换行
-  },
+  markdown: {},
   theme: 'yun',
+
+  vite: {
+    server: {
+      watch: {
+        usePolling: true,
+      },
+    },
+  },
 
   themeConfig: {
     banner: {
       enable: true,
-      title: '哈喽哈喽',
+      title: 'WTF,你怎么进来的',
     },
 
     pages: [
@@ -41,7 +47,7 @@ export default defineValaxyConfig<UserThemeConfig>({
       since: 2016,
       beian: {
         enable: true,
-        icp: '苏ICP备17038157号',
+        icp: '苏ICP备114514号',
       },
     },
   },
