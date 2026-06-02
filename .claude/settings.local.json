@@ -6,7 +6,17 @@
       "Bash(ls -la \"C:\\\\\\\\Users\\\\\\\\Administrator\\\\\\\\Desktop\\\\\\\\项目\\\\\\\\myhomepage\\\\\\\\zyh8798.github.io\\\\\\\\patches\\\\\\\\\")",
       "Bash(ls \"C:\\\\\\\\Users\\\\\\\\Administrator\\\\\\\\Desktop\\\\\\\\项目\\\\\\\\myhomepage\\\\\\\\zyh8798.github.io\\\\\\\\patches\\\\\\\\\")",
       "Bash(pnpm install *)",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git filter-branch *)",
+      "Bash(git stash *)",
+      "Bash(pnpm run *)",
+      "Bash(node *)",
+      "Bash(git ls-remote *)",
+      "Bash(gh api *)",
+      "Bash(git fetch *)"
     ]
   }
 }
