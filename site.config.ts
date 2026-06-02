@@ -11,7 +11,7 @@ export default defineSiteConfig({
       emoji:'🌈',
     }
   },
-  description: '讨厌争论,讨厌不平等',
+  description: '爱所有人,更爱少数人',
   subtitle:'',
   social: [
     // {
@@ -100,26 +100,26 @@ export default defineSiteConfig({
 
   sponsor: {
     enable: true,
-    title: '请给我钱',
-    methods: [
-      {
-        name: '支付宝',
-        url: 'https://cdn.yunyoujun.cn/img/donate/alipay-qrcode.jpg',
-        color: '#00A3EE',
-        icon: 'i-ri-alipay-line',
-      },
-      {
-        name: 'QQ 支付',
-        url: 'https://cdn.yunyoujun.cn/img/donate/qqpay-qrcode.png',
-        color: '#12B7F5',
-        icon: 'i-ri-qq-line',
-      },
-      {
-        name: '微信支付',
-        url: 'https://cdn.yunyoujun.cn/img/donate/wechatpay-qrcode.jpg',
-        color: '#2DC100',
-        icon: 'i-ri-wechat-pay-line',
-      },
-    ],
+    title: '哇偶,你的鼠标停在爱心上欸',
+    // methods: [
+    //   {
+    //     name: '支付宝',
+    //     url: 'https://cdn.yunyoujun.cn/img/donate/alipay-qrcode.jpg',
+    //     color: '#00A3EE',
+    //     icon: 'i-ri-alipay-line',
+    //   },
+    //   {
+    //     name: 'QQ 支付',
+    //     url: 'https://cdn.yunyoujun.cn/img/donate/qqpay-qrcode.png',
+    //     color: '#12B7F5',
+    //     icon: 'i-ri-qq-line',
+    //   },
+    //   {
+    //     name: '微信支付',
+    //     url: 'https://cdn.yunyoujun.cn/img/donate/wechatpay-qrcode.jpg',
+    //     color: '#2DC100',
+    //     icon: 'i-ri-wechat-pay-line',
+    //   },
+    // ],
   },
 })
