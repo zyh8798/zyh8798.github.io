@@ -12,7 +12,7 @@ export default defineSiteConfig({
     }
   },
   description: '讨厌争论,讨厌不平等',
-  subtitle:'日记散播负能量',
+  subtitle:'',
   social: [
     // {
     //   name: 'RSS',
@@ -100,7 +100,7 @@ export default defineSiteConfig({
 
   sponsor: {
     enable: true,
-    title: '我很没钱，请给我钱！',
+    title: '请给我钱',
     methods: [
       {
         name: '支付宝',

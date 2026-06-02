@@ -1,7 +1,6 @@
 ---
 title: 关于站点
 ---
+博物馆只对访客开放
 
-Valaxy + valaxy-theme-yun Demo Site
 
-- Default Theme: [valaxy-theme-yun](https://github.com/YunYouJun/valaxy/blob/main/packages/valaxy-theme-yun/)

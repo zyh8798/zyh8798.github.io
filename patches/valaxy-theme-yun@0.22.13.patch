@@ -1,0 +1,16 @@
+diff --git a/components/YunBanner.vue b/components/YunBanner.vue
+index 0000000..0000000 100644
+--- a/components/YunBanner.vue
++++ b/components/YunBanner.vue
+@@ -43,10 +43,10 @@
+ onMounted(async () => {
+   await sleep(500)
+   lineStatus.value = 'active'
+   if (yun.isNimbo) {
+-    await sleep(500)
++    await sleep(800)
+     lineStatus.value = 'exit'
+
+     animationStatus.value = 'prologue'
+   }
+ })

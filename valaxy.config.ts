@@ -25,7 +25,7 @@ export default defineValaxyConfig<UserThemeConfig>({
   themeConfig: {
     banner: {
       enable: true,
-      title: 'WTF,你怎么进来的',
+      title: '相信的心就是你的力量',
     },
 
     pages: [
@@ -35,12 +35,12 @@ export default defineValaxyConfig<UserThemeConfig>({
         icon: 'i-ri-book-2-line',
         color: 'dodgerblue',
       },
-      // {
-      //   name: '备忘录',
-      //   url: '/girls/',
-      //   icon: 'i-ri-women-line',
-      //   color: 'hotpink',
-      // },
+      {
+        name: '简历',
+        url: '/resume/',
+        icon: 'i-ri-book-2-line', 
+        color: 'hotpink',
+      }
     ],
 
     footer: {
