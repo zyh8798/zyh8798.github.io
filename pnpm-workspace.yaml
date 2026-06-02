@@ -1,2 +1,7 @@
 patchedDependencies:
   valaxy-theme-yun@0.22.13: patches/valaxy-theme-yun@0.22.13.patch
+
+onlyBuiltDependencies:
+  - esbuild
+  - "@parcel/watcher"
+  - vue-demi
