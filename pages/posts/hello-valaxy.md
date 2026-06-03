@@ -216,6 +216,20 @@ shallowRef：只对 .value 层级进行响应式追踪，避免深层代理
 更新触发范围（diff 维度）
 
 ## 控制面板性能指标用什么去看,里面有什么参数?
+当时主要从三个维度验证：
+
+冷启动时间（Cold Start），Webpack 启动需要数秒，而 Vite 基本在 1 秒内完成。
+HMR 热更新速度，修改组件后 Vite 几乎实时更新，而 Webpack 需要重新编译部分模块。
+通过 Chrome DevTools 的 Network 和 Lighthouse 观察资源加载情况和性能指标。
+
+因为 Vite 基于原生 ESM 和 esbuild 预构建依赖，不需要像 Webpack 那样在启动阶段打包整个项目，所以开发体验明显更快。
+
+
+你的项目从webpack迁移到vite快了吗?怎么看出来快的?  
+
+从run dev的启动时间可以看到,浏览器的network可以看到webpack是一个巨大的js文件,vite则是全部按需引入
+
+
 ## 手写并发请求控制函数
 ## 浏览器对同一域名的资源加载并发上限是多少？
 ## 手写自定义 Hook：参数变化自动执行。
