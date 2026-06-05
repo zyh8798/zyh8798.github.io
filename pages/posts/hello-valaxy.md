@@ -356,38 +356,58 @@ Vite 不再通过 process.env 注入环境变量，而是通过 import.meta.env 
 ## 手写并发请求控制函数
 
 ```js
-function asyncPool(requestList,max=3){
-  return new Promise(resolve=>{
-  let result = []
-  let finished = 0
-  let index = 0
+  const fn = () => {
+            return fetch("https://jsonplaceholder.typicode.com/posts/1")
+                .then(res => res.json());
+        }
 
-  const run = ()=>{
-    if(finished === requestList.length){
-       resolve(result)
-    }
-    if(index === requestList.length)return
-    let currentIndex = index
-    let task = requestList[currentIndex]
-    index++
-    task.then((res)=>{
-    requestList[currentIndex] = res
-    }).catch(err=>{
-    requestList[currentIndex] = err
-    }).finally(()=>{
-      run()
-    })
-  }
+        let requestList = new Array(20).fill(fn);
 
-  for(let i=0 ;i<=max;i++){
-    run()
-  }
-  })
+        await asyncPool(requestList);
 
-}
+        function asyncPool(list, max = 3) {
+            return new Promise(resolve => {
+                let result = []
+                let finished = 0;
+                let index = 0;
+
+                const run = () => {
+                    if (finished === list.length) {
+                        resolve(result)
+                        return;
+
+                    }
+
+                    if (index === list.length) {
+                        return;
+                    }
+
+                    let currentIndex = index;
+                    index++
+                    let task = list[currentIndex];
+
+                    task().then(res => {
+                        result[currentIndex] = res
+                    }).catch(err => {
+                        result[currentIndex] = err
+                    }).finally(() => {
+                        finished++
+                        console.log(`finished: ${finished}, index: ${index}`)
+                        run()
+                    })
+                }
+
+                for (let i = 0; i < max; i++) {
+                    run()
+                }
+            })
+
+        }
 ```
 ## 浏览器对同一域名的资源加载并发上限是多少？
+浏览器对同一域名的资源加载并发上限在 HTTP/1.1 环境下通常是 6 个左右，超过的请求会进入等待队列。这样做是为了避免单个站点占用过多网络资源。HTTP/2 引入了多路复用机制，多个请求可以复用同一个 TCP 连接，因此不再受传统 6 个连接限制的影响。
 ## 手写自定义 Hook：参数变化自动执行。
+
 ## 手写 SKU 算法（两个颜色三个规格计算组合）。
 ## 站点与站点之间的参数传递方案（除了 Cookie 和路由）。
 ## 【致命点】v-if 的底层原理到底是什么？
