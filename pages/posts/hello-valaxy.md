@@ -407,7 +407,39 @@ Vite 不再通过 process.env 注入环境变量，而是通过 import.meta.env 
 ## 浏览器对同一域名的资源加载并发上限是多少？
 浏览器对同一域名的资源加载并发上限在 HTTP/1.1 环境下通常是 6 个左右，超过的请求会进入等待队列。这样做是为了避免单个站点占用过多网络资源。HTTP/2 引入了多路复用机制，多个请求可以复用同一个 TCP 连接，因此不再受传统 6 个连接限制的影响。
 ## 手写自定义 Hook：参数变化自动执行。
+```js
+import { ref, watch, type Ref } from 'vue'
+export function useList<T, P>(api: (params: P) => Promise<T[]>, params: Ref<P>) {
+    const list = ref<T[]>([])
 
+    const loading = ref(false)
+
+    const getList = async () => {
+        loading.value = true
+        try {
+            const res = await api(params.value)
+            list.value = res
+        } finally {
+            loading.value = false
+        }
+    }
+    watch(params, getList,
+        {
+            immediate: true,
+            deep: true
+
+        }
+    )
+
+
+    return {
+        list,
+        loading,
+        getList
+    }
+}
+
+```
 ## 手写 SKU 算法（两个颜色三个规格计算组合）。
 ## 站点与站点之间的参数传递方案（除了 Cookie 和路由）。
 ## 【致命点】v-if 的底层原理到底是什么？
