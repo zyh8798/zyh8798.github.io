@@ -438,9 +438,27 @@ export function useList<T, P>(api: (params: P) => Promise<T[]>, params: Ref<P>) 
         getList
     }
 }
-
+// 参数变化太频繁了浪费怎么办? 和分页组件的修改重复了怎么办?
+// 分开做,要么hook的请求就只是占位,给分页组件的change去做请求,要么分页组件的change不用,全部交给hook
+// 太频繁的问题可以不用监听,让用户手动修改完(假设有很多参数)手动点确认再调用
 ```
-## 手写 SKU 算法（两个颜色三个规格计算组合）。
+## 手写两个颜色三个规格计算组合的SKU。
+```js
+// 简单到爆炸的两个循环,我居然说自己不会,一听到SKU就懦了
+const sizes= ['M','L','S']
+const colors = ['蓝色','红色','黄色']
+function sku(colors,sizes){
+const result = []
+for(color of colors){
+  for(size of sizes){
+    result.push([color,size])
+  }
+}
+return result
+}
+sku(color,sizes)
+```
+
 ## 站点与站点之间的参数传递方案（除了 Cookie 和路由）。
 ## 【致命点】v-if 的底层原理到底是什么？
 ## 浏览器地址栏输入 URL 后到底发生了什么？
