@@ -444,7 +444,7 @@ export function useList<T, P>(api: (params: P) => Promise<T[]>, params: Ref<P>) 
 ```
 ## 手写两个颜色三个规格计算组合的SKU。
 ```js
-// 简单到爆炸的两个循环,我居然说自己不会,一听到SKU就懦了
+// 至少两个的话,就是简单到爆炸的两个循环,我居然说自己不会,一听到SKU就懦了
 const sizes= ['M','L','S']
 const colors = ['蓝色','红色','黄色']
 function sku(colors,sizes){
@@ -457,8 +457,83 @@ for(color of colors){
 return result
 }
 sku(color,sizes)
+
+// 三个才需要算笛卡尔积,reduce 版本
+function cartesian(arr) {
+  return arr.reduce((prev, current) => {
+    const result = []
+
+    for (const p of prev) {
+      for (const c of current) {
+        result.push([...p, c])
+        console.log(result)
+      }
+    }
+
+    return result
+  }, [[]])
+}
+
+const data = [
+  ['红色', '蓝色'],
+  ['S', 'M', 'L'],
+  ['套餐1', '套餐2']
+]
+
+console.log(cartesian(data))
+```
+
+```js
+// 三个循环版本,原理就是定义 当前已有组合 循环当前规格  拼接新的组合
+// 先有一个空组合,然后先把颜色乘进去得到颜色组合,然后把尺码乘进去得到颜色+尺码组合然后把套餐乘进去得到颜色+尺码+套餐组合
+// 使用三层循环：
+// 第一层循环当前规格，
+// 第二层循环已有组合，
+// 第三层循环当前规格中的每一个值，
+
+// 不断把旧组合和当前值进行拼接，生成新的组合，最终得到所有 SKU。
+function cartesian(arr) {
+    let result = [[]]
+
+    for (const specs of arr) {
+        const temp = []
+        console.log('本轮specs:', specs)
+        for (const item of result) {
+            console.log('本轮item:', item)
+            for (const value of specs) {
+                console.log('本轮value:', value)
+                temp.push([...item, value])
+            }
+        }
+
+        result = temp
+        console.log('本轮result:', result)
+
+    }
+
+    return result
+}
+
+const data = [
+    ['红色', '蓝色'],
+    ['S', 'M', 'L'],
+    ['套餐1', '套餐2']
+]
+
+console.log('结果:', cartesian(data))
 ```
 
 ## 站点与站点之间的参数传递方案（除了 Cookie 和路由）。
+站点之间传递参数常见方案有：
+
+1.URL参数，例如 query 或 hash。
+
+2.window.postMessage，通过 iframe 或新窗口进行跨域通信。
+
+3.服务端中转，A站将数据存储到服务端，B站再获取数据，这是企业系统最常见方案。
+
+4.OAuth 授权流程，例如微信登录、GitHub 登录，本质上通过授权码和服务端交换用户信息。
+
+Cookie、LocalStorage、SessionStorage 通常受同源策略限制，不能直接用于跨站点数据共享。
 ## 【致命点】v-if 的底层原理到底是什么？
 ## 浏览器地址栏输入 URL 后到底发生了什么？
