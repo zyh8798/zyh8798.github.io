@@ -530,10 +530,47 @@ console.log('结果:', cartesian(data))
 
 2.window.postMessage，通过 iframe 或新窗口进行跨域通信。
 
+postMessage 并不是根据域名通信，而是根据 Window 对象通信。
+
+常见获取 Window 对象的方式有：
+
+1. iframe.contentWindow
+2. window.parent
+3. window.opener
+4. window.open()
+
+第二个参数 origin 只是安全校验，并不是用于寻找目标窗口。
+
 3.服务端中转，A站将数据存储到服务端，B站再获取数据，这是企业系统最常见方案。
 
 4.OAuth 授权流程，例如微信登录、GitHub 登录，本质上通过授权码和服务端交换用户信息。
+如果A、B有共同的数据源（Redis、数据库、共享API），可以通过服务端中转传递数据。
 
+如果A、B没有共同的数据源，则只能通过对方开放的API获取数据。
+
+当API涉及用户身份和权限时，通常会使用OAuth获取访问凭证（access_token）后再调用API。
+
+OAuth是一种授权协议，用于让第三方应用在不获取用户密码的情况下访问用户资源。
+
+典型场景是微信登录、GitHub登录、QQ登录。
+
+流程通常是：
+用户授权 → 获取code → 服务端换token → 调用开放API获取用户信息。
 Cookie、LocalStorage、SessionStorage 通常受同源策略限制，不能直接用于跨站点数据共享。
-## 【致命点】v-if 的底层原理到底是什么？
+## v-if 的底层原理到底是什么？
+v-if 底层并不是修改 CSS，而是条件渲染。Vue 会根据条件决定是否创建或销毁对应的 VNode 和真实 DOM。当条件从 false 变为 true 时，会重新创建组件并执行 mounted；从 true 变为 false 时，会卸载组件，执行 beforeDestroy/destroyed（Vue2）或 beforeUnmount/unmounted（Vue3），最后删除对应 DOM。因此切换成本较高。
+
+v-show 才是通过修改元素的 display:none/display:block 来控制显示和隐藏，DOM 一直存在，因此 mounted 只会执行一次，切换性能更好。
 ## 浏览器地址栏输入 URL 后到底发生了什么？
+1. 浏览器解析URL。
+
+2. 进行DNS域名解析，将域名解析成IP地址，并优先查询浏览器和操作系统缓存。
+
+3. 建立TCP连接；如果是HTTPS，还会进行TLS握手完成证书验证和密钥协商。
+
+4. 浏览器发送HTTP请求，服务端处理后返回响应。
+
+5. 浏览器解析HTML生成DOM树，解析CSS生成CSSOM树，合成Render Tree，然后进行Layout、Paint、Composite完成页面渲染。
+
+6. 遇到CSS、JS、图片等资源继续发起请求，JS执行后页面最终完成交互。
+
