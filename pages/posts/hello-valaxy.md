@@ -574,3 +574,267 @@ v-show 才是通过修改元素的 display:none/display:block 来控制显示和
 
 6. 遇到CSS、JS、图片等资源继续发起请求，JS执行后页面最终完成交互。
 
+
+## computed 和 watch 的区别(往下的都是扩展题目)
+cmputed主要用来派生值,watch主要用来执行副作用
+
+为什么一个有缓存一个没缓存? 因为computed有返回值,watch没有返回值
+
+computed能不能做异步处理? 理论上可以但是不推荐,设计的初衷就是用来同步的返回数据的,要做放到watch里面做副作用请求比较好
+
+
+## Vue 的 nextTick 原理
+Vue 的 DOM 更新是异步的。当响应式数据发生变化时，Vue 不会立即更新 DOM，而是先将更新任务放入调度队列（Scheduler），并利用 Promise.then 创建微任务，在当前同步代码执行结束后统一刷新 DOM，实现批量更新，避免频繁回流和重绘。
+
+nextTick 的作用就是等待这一轮 DOM 更新完成后，再执行回调，因此常用于获取更新后的 DOM 或操作第三方库
+
+Vue 确实优先使用：
+
+Promise.resolve().then(...)
+
+nextTick 的实现不是只有 Promise。
+
+Vue 内部会根据环境降级。
+
+例如：
+
+Promise.then
+    ↓
+MutationObserver（旧浏览器）
+    ↓
+setImmediate（IE）
+    ↓
+setTimeout
+
+Vue2 就有这样一套降级策略。
+
+Vue3 因为浏览器环境要求更高，基本就是：
+
+Promise.resolve().then(flushJobs)
+
+为什么首选微任务?因为微任务执行起来比宏任务更快,宏任务会被推迟到下一轮才执行,还得手动做去重
+
+1. Vue 为什么是异步更新？
+
+为什么：
+
+count.value++
+
+console.log(dom)
+
+DOM 还是旧的？
+
+为什么要批量更新（Batch Update）？
+
+4. Vue3 为什么 Proxy 比 Object.defineProperty 好？
+
+这个几乎必问。
+
+例如：
+
+const obj = reactive({})
+
+为什么不用 defineProperty？
+
+二、Vue 生命周期（★★★★★）
+5. 父子组件生命周期执行顺序
+
+例如：
+
+<App>
+    <Child />
+</App>
+
+mounted 谁先？
+
+destroy 谁先？
+
+6. keep-alive 的原理
+
+为什么：
+
+<keep-alive>
+
+不会执行 destroyed？
+
+什么时候执行：
+
+activated
+
+deactivated
+三、浏览器（★★★★★）
+7. 浏览器缓存
+
+这个一定要会。
+
+包括：
+
+强缓存
+
+Expires
+
+Cache-Control
+
+以及：
+
+协商缓存
+
+ETag
+
+Last-Modified
+
+还有：
+
+304
+8. localStorage、sessionStorage、Cookie 区别
+
+非常经典。
+
+最好还能说：
+
+为什么 JWT 经常不用 Cookie。
+
+9. 浏览器事件循环(Event Loop)
+
+例如：
+
+console.log(1)
+
+setTimeout(()=>{},0)
+
+Promise.resolve()
+
+console.log(2)
+
+输出顺序。
+
+以及：
+
+宏任务(MacroTask)
+
+微任务(MicroTask)
+四、网络（★★★★★）
+10. HTTP 和 HTTPS 区别
+
+不仅仅：
+
+HTTPS更安全
+
+最好能说：
+
+TLS
+
+证书
+
+对称加密
+
+非对称加密
+11. Cookie、Session、JWT 区别
+
+你前几天已经学了一部分。
+
+这题高频。
+
+12. 为什么 JWT 可以无状态？
+
+Session 为什么必须 Redis？
+
+五、JavaScript（★★★★★）
+13. 闭包是什么？
+
+不仅定义。
+
+最好能说：
+
+为什么会内存泄漏。
+
+14. this 指向
+
+普通函数
+
+箭头函数
+
+call
+
+apply
+
+bind
+
+new
+
+15. 防抖(Debounce)和节流(Throttle)
+
+要求：
+
+现场手写。
+
+六、工程化（★★★★★）
+16. Tree Shaking 原理
+
+为什么：
+
+ESM支持
+
+CommonJS不支持
+17. 为什么 ESM 能 Tree Shaking？
+
+为什么：
+
+import
+
+可以。
+
+require
+
+不行。
+
+18. Rollup 和 Webpack 有什么区别？
+
+你既然迁移过 Vite。
+
+这一题很容易被追问。
+
+七、如果是中厂，我建议额外准备（加分）
+
+如果还有精力，再准备这几道。
+
+Vue
+diff 算法
+key 为什么不能用 index
+响应式原理
+浏览器
+回流(Reflow) 和 重绘(Repaint)
+requestAnimationFrame
+网络
+HTTP1 HTTP2 HTTP3
+WebSocket 和 SSE
+工程化
+Rollup Plugin
+Babel 做了什么
+sourceMap 原理
+我建议的刷题顺序（按优先级）
+优先级	题目	必须会
+⭐⭐⭐⭐⭐	computed vs watch	✅
+⭐⭐⭐⭐⭐	nextTick 原理	✅
+⭐⭐⭐⭐⭐	Proxy vs defineProperty	✅
+⭐⭐⭐⭐⭐	浏览器缓存	✅
+⭐⭐⭐⭐⭐	Event Loop	✅
+⭐⭐⭐⭐⭐	HTTP vs HTTPS	✅
+⭐⭐⭐⭐⭐	Cookie Session JWT	✅
+⭐⭐⭐⭐⭐	闭包	✅
+⭐⭐⭐⭐⭐	防抖节流	✅
+⭐⭐⭐⭐⭐	Tree Shaking	✅
+⭐⭐⭐⭐	keep-alive	○
+⭐⭐⭐⭐	父子生命周期	○
+⭐⭐⭐⭐	localStorage sessionStorage Cookie	○
+⭐⭐⭐⭐	Rollup vs Webpack	○
+⭐⭐⭐	Diff算法	○
+⭐⭐⭐	key 为什么不能用 index	○
+⭐⭐⭐	HTTP2	○
+⭐⭐⭐	requestAnimationFrame	○
+
+我的建议是：
+
+这 18 道题不用一次性全部背完。我们可以继续保持现在这种节奏——一道一道过。你的特点是理解能力不错，一旦真正理解了就不容易忘，但一次塞太多反而会混淆。
+
+从你的面试经历来看，我觉得把这 18 道吃透，再结合你已经复盘的那二十来道题，应对大部分 3 年左右的 Vue 前端岗位已经比较有把握了。然后就可以继续投简历，把面试当成下一轮查漏补缺，而不是等准备到“百分之百”才开始。
