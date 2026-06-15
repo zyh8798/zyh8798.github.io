@@ -614,31 +614,45 @@ Promise.resolve().then(flushJobs)
 
 为什么首选微任务?因为微任务执行起来比宏任务更快,宏任务会被推迟到下一轮才执行,还得手动做去重
 
-1. Vue 为什么是异步更新？
-
+## Vue 为什么是异步更新？
 为什么：
-
 count.value++
 
 console.log(dom)
 
 DOM 还是旧的？
 
+Vue 的响应式数据更新是同步的，但 DOM 更新是异步的。当响应式数据发生变化时，Vue 不会立即操作 DOM，而是先将更新任务加入调度队列，在当前同步代码执行结束后，通过微任务统一刷新 DOM。这样可以把同一轮事件循环中的多次数据修改合并为一次 DOM 更新，减少频繁的回流和重绘，提高页面性能。
+
 为什么要批量更新（Batch Update）？
 
-4. Vue3 为什么 Proxy 比 Object.defineProperty 好？
+Vue 采用批量更新的目的是减少 DOM 操作次数。因为 DOM 更新会触发浏览器的样式计算（Style）、布局（Layout）、绘制（Paint）等渲染流程，成本远高于普通 JavaScript 运算。Vue 会将同一轮事件循环中的多个数据变化先加入调度队列（Scheduler），并进行去重，最后统一更新 DOM。这样既减少了浏览器渲染次数，也避免了同一组件重复更新，从而提高页面性能。
 
-这个几乎必问。
 
-例如：
 
-const obj = reactive({})
+## Vue3 为什么 Proxy 比 Object.defineProperty 好？
+Vue2 使用 Object.defineProperty 对每个属性分别进行劫持，因此初始化时需要递归遍历整个对象，为每个属性设置 getter 和 setter。Vue3 改用 Proxy 代理整个对象，不需要遍历所有属性，响应式实现更加高效。除此之外，Proxy 还解决了 Vue2 无法监听新增属性、删除属性以及数组索引变化等问题，可拦截的操作也更加丰富，因此 Vue3 最终选择了 Proxy。
 
-为什么不用 defineProperty？
+proxy这么好为什么vue2不用? 
 
-二、Vue 生命周期（★★★★★）
-5. 父子组件生命周期执行顺序
+Vue2 发布于：2016 年 而 Proxy：ES2015（ES6）
+虽然规范早就有了，但是：
 
+浏览器支持非常差。
+
+尤其是：
+
+IE11 ❌
+老版 Android 浏览器 ❌
+老版 Safari ❌
+
+Vue2 并不是不知道 Proxy 更优秀，而是在当时必须兼容 IE11 等旧浏览器。Proxy 属于 ES6 新特性，IE 完全不支持，而且无法通过 polyfill 模拟，因此 Vue2 只能选择兼容性更好的 Object.defineProperty。等到 Vue3 发布时，前端生态已经基本放弃 IE，浏览器对 Proxy 的支持成熟，Vue 才全面重构响应式系统。
+
+那为什么vue2为什么不通过polyfill(垫片)去实现模拟一个proxy?实现兼容更多浏览器?
+Polyfill 就是：浏览器不会，我用 JavaScript 给它补一个；但像 Proxy 这种需要 JavaScript 引擎底层支持的能力，就补不了。
+
+
+##  父子组件生命周期执行顺序
 例如：
 
 <App>
@@ -648,22 +662,36 @@ const obj = reactive({})
 mounted 谁先？
 
 destroy 谁先？
+父的beforeCreated 然后父的 created 然后父的 beforeMounted 然后 然后子的beforeCreated 然后子的 created 然后子的beforeMounted 然后子的mounted
+然后父的 mounted 如果销毁的话就是 父的 beforeDesotry 然后子的 beforeDestory 子的 destory  然后 然后父的 destory
 
-6. keep-alive 的原理
 
-为什么：
 
-<keep-alive>
+## keep-alive 的原理
+KeepAlive 是 Vue 提供的一个抽象组件，本身不会渲染 DOM。它的作用是缓存组件实例，而不是销毁组件。当组件第一次渲染时，会创建实例并缓存；再次切换回来时，直接复用缓存的实例，因此不会重新执行 created 和 mounted，而是触发 activated；切换出去时也不会执行 destroyed，而是执行 deactivated。内部通过维护缓存（cache）和缓存顺序（keys）管理组件，当设置 max 时，会采用 LRU（最近最少使用）算法淘汰最久未使用的组件。
 
-不会执行 destroyed？
+KeepAlive 为什么叫抽象组件（Abstract Component）？它为什么不会渲染 DOM？
 
-什么时候执行：
+除了 KeepAlive，还有哪些抽象组件？
 
-activated
+Vue2 有几个比较典型：
 
-deactivated
-三、浏览器（★★★★★）
-7. 浏览器缓存
+KeepAlive
+
+Transition
+
+TransitionGroup（某种程度上）
+
+Teleport（Vue3）
+
+vue2通过abstract:true就能实现抽象组件的封装,vue3因为重构了渲染器所以没有这个属性了
+
+Vue3 为什么没有 abstract: true？
+
+Vue3 重构了渲染器，不再依赖 abstract: true 跳过组件，而是通过 KeepAlive 自身的特殊标识（__isKeepAlive）和渲染器对 VNode 的特殊处理来实现缓存和生命周期管理，因此抽象组件不再是一个公开的配置项，而是框架内部的一种实现机制。
+
+
+## 浏览器缓存
 
 这个一定要会。
 
