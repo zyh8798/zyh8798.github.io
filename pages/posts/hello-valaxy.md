@@ -864,9 +864,25 @@ this 指向由调用方式决定（箭头函数除外）。
         };
       }
 ```
+### webpack的打包流程
+Webpack 打包时首先会读取 webpack.config.js 配置文件，根据 entry 找到入口文件。
 
+然后解析入口文件生成 AST，分析其中的 import 和 require，并递归解析所有依赖模块，最终构建出完整的依赖图（Dependency Graph）。
 
-六、工程化（★★★★★）
+在解析过程中，如果遇到 Webpack 无法直接处理的资源，例如 Vue、TypeScript、CSS 等文件，会根据配置调用对应 Loader，将其转换为 Webpack 可识别的 JavaScript 模块，并继续递归分析依赖。
+
+所有模块处理完成后，Webpack 会根据依赖关系生成一个或多个 Chunk。
+
+在整个构建过程中，Plugin 可以通过监听 Webpack 生命周期的 Hook 参与各个阶段，例如生成 HTML、压缩代码、清理目录等。
+
+最后将 Chunk 打包生成 Bundle 文件输出到 dist 目录。
+
+其中 Loader 作用于单个模块，负责模块转换；Plugin 作用于整个构建流程，负责扩展 Webpack 能力。
+
+Loader 执行顺序是从右向左，因为后一个 Loader 的输出会作为前一个 Loader 的输入。
+
+## 浏览器的渲染流传和渲染管线
+
 1.  Tree Shaking 原理
 
 为什么：
