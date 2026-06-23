@@ -726,11 +726,62 @@ Cookie 可以设置 HttpOnly，JavaScript 无法读取，安全性更高；而 l
 
 
 ##  HTTP 和 HTTPS 区别
-TTP 是明文传输协议，数据在传输过程中可能被窃听、篡改，也无法验证服务器身份；HTTPS 则是在 HTTP 的基础上加入 TLS 加密协议，通过数据加密、完整性校验以及数字证书认证三种机制，保证通信过程的安全性。HTTP 默认端口为 80，HTTPS 默认端口为 443。由于 HTTPS 需要进行 TLS 握手，因此首次建立连接会比 HTTP 多一次握手开销，但现代 TLS 已经将性能影响降到很低。
+HTTP（HyperText Transfer Protocol，超文本传输协议）就是浏览器和服务器约定好的一套"聊天规则"。
+
+HTTP 是一种应用层协议（Application Layer Protocol），它定义了浏览器与服务器之间请求和响应的格式，也就是双方通信的规则。随着互联网的发展，为了解决性能问题，HTTP 从 1.1 演进到 2，再到 3，每个版本都在优化传输效率；而 HTTPS 并不是 HTTP 的新版本，而是在 HTTP 的基础上增加了 TLS 加密，用于保证通信的安全性。
+
+由于HTTP 是明文传输协议，数据在传输过程中可能被窃听、篡改，也无法验证服务器身份；HTTPS 则是在 HTTP 的基础上加入 TLS 加密协议，通过数据加密、完整性校验以及数字证书认证三种机制，保证通信过程的安全性。HTTP 默认端口为 80，HTTPS 默认端口为 443。由于 HTTPS 需要进行 TLS 握手，因此首次建立连接会比 HTTP 多一次握手开销，但现代 TLS 已经将性能影响降到很低。
 
 HTTPS是怎么加密的?
 
 HTTPS 采用混合加密。TLS 握手阶段利用非对称加密安全地交换对称密钥，后续所有业务数据都使用对称加密传输，因为对称加密速度远快于非对称加密，更适合大量数据传输。
+
+
+HTTP
+│
+├── HTTP/1.1 长连接 HTTP 层队头阻塞
+│      ↑
+│      │
+│      └── 浏览器和服务器聊天规则（旧）
+│
+├── HTTP/2 多路复用 Header 压缩 解决 HTTP 层队头阻塞 (但是TCP还是有TCP层的堵塞)
+│      ↑
+│      │
+│      └── 聊天规则升级（支持多路复用）
+│
+└── HTTP/3 QUIC 内置 TLS 解决 TCP 层队头阻塞
+       ↑
+       │
+       └── 聊天规则再次升级（基于 QUIC）
+
+      
+ HTTP
+│
+│ 定义怎么聊天
+│
+TLS
+│
+│ 保证聊天安全
+│
+TCP
+│
+│ 保证可靠送达
+│
+IP
+│
+│ 负责找到目标地址
+
+IP（Internet Protocol，互联网协议）
+UDP（User Datagram Protocol，用户数据报协议）
+TCP（Transmission Control Protocol，传输控制协议）
+QUIC (Quick UDP Internet Connections 快速 UDP 互联网连接)
+
+既然 QUIC 这么厉害，为什么不直接替代 TCP？
+
+标准答案：
+
+因为 QUIC 主要是为 HTTP 场景设计的，而 TCP 已经广泛应用于数据库、SSH、Redis、邮件等各种协议，这些协议没有必要为了 QUIC 重写整个生态。另外，QUIC 在用户态（User Space）实现，而 TCP 是操作系统内核（Kernel）实现，各有适用场景，因此未来很可能长期共存，而不是完全替代。
+
 
 ## 为什么 JWT 可以无状态？
 什么叫状态（State）？
@@ -784,9 +835,35 @@ this 指向由调用方式决定（箭头函数除外）。
 技巧:普通函数看调用者,普通函数是JS里面的一等公民,它一个人就是一个单位,大部分时候看一看最后是不是单独赋值了,单独赋值了就不管前面的东西了,它自己就有一个this
 ## 防抖(Debounce)和节流(Throttle)
 ```js
-
+// 注意使用addEventListener需要的是一个函数,如果单纯的把debounce穿过去不return一个函数此时debouce的返回值是undefined所以要返回一个函数
+      function debounce(fn, delay) {
+        return function (...args) {
+          if (timer) {
+            console.log("to fast");
+            clearTimeout(timer);
+          }
+          timer = setTimeout(function () {
+            fn.apply(this, args);
+          }, delay);
+        };
+      }
 ```
 
+```js
+// 注意 每次都需要取到最新的当前时间,所以now要放在每次的位置
+      function throttle(fn, delay) {
+        let last = 0;
+        return function (...args) {
+          let now = Date.now();
+          if (now - last >= delay) {
+            fn.apply(this, args);
+            last = now;
+          } else {
+            console.log("已节流");
+          }
+        };
+      }
+```
 
 
 六、工程化（★★★★★）
