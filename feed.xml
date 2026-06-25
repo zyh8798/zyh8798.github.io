@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>喜欢下雨,喜欢美少女</title>
+        <link>https://valaxy.site/</link>
+        <description>爱所有人,更爱少数人</description>
+        <lastBuildDate>Thu, 25 Jun 2026 10:02:35 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <image>
+            <title>喜欢下雨,喜欢美少女</title>
+            <url>http://p1.music.126.net/eqFT_tSXob5r3E8LHtQVmg==/109951169774542338.jpg?param=180y180</url>
+            <link>https://valaxy.site/</link>
+        </image>
+        <copyright>CC BY-NC-SA 4.0 2026 © 朱英豪</copyright>
+        <atom:link href="https://valaxy.site/feed.xml" rel="self" type="application/rss+xml"/>
+        <item>
+            <title><![CDATA[面砸了的面试题]]></title>
+            <link>https://valaxy.site/posts/hello-valaxy</link>
+            <guid>https://valaxy.site/posts/hello-valaxy</guid>
+            <pubDate>Mon, 10 Mar 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>如何解决微信小程序自定义tabbar图标闪烁问题?</h2>
+<p>不能。<br>
+从微信小程序的多 WebView 架构来看，页面切换会导致组件重新挂载，因此普通自定义 TabBar 天然存在闪烁风险。</p>
+<p>可以</p>
+<br/><p>访问 <a href="https://valaxy.site/posts/hello-valaxy" target="_blank">https://valaxy.site/posts/hello-valaxy</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (朱英豪)</author>
+        </item>
+    </channel>
+</rss>

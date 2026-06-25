@@ -1,0 +1,26 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "喜欢下雨,喜欢美少女",
+    "home_page_url": "https://valaxy.site/",
+    "feed_url": "https://valaxy.site/feed.json",
+    "description": "爱所有人,更爱少数人",
+    "icon": "http://p1.music.126.net/eqFT_tSXob5r3E8LHtQVmg==/109951169774542338.jpg?param=180y180",
+    "author": {
+        "name": "朱英豪",
+        "url": "https://valaxy.site"
+    },
+    "items": [
+        {
+            "id": "",
+            "content_html": "<h2>如何解决微信小程序自定义tabbar图标闪烁问题?</h2>\n<p>不能。<br>\n从微信小程序的多 WebView 架构来看，页面切换会导致组件重新挂载，因此普通自定义 TabBar 天然存在闪烁风险。</p>\n<p>可以</p>\n<br/><p>访问 <a href=\"https://valaxy.site/posts/hello-valaxy\" target=\"_blank\">https://valaxy.site/posts/hello-valaxy</a> 阅读全文。</p>",
+            "url": "https://valaxy.site/posts/hello-valaxy",
+            "title": "面砸了的面试题",
+            "date_modified": "2025-03-10T00:00:00.000Z",
+            "date_published": "2025-03-10T00:00:00.000Z",
+            "author": {
+                "name": "朱英豪",
+                "url": "https://valaxy.site"
+            }
+        }
+    ]
+}

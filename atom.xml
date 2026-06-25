@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://valaxy.site/</id>
+    <title>喜欢下雨,喜欢美少女</title>
+    <updated>2026-06-25T10:02:35.782Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <author>
+        <name>朱英豪</name>
+        <email>i@valaxy.site</email>
+        <uri>https://valaxy.site</uri>
+    </author>
+    <link rel="alternate" href="https://valaxy.site/"/>
+    <link rel="self" href="https://valaxy.site/atom.xml"/>
+    <subtitle>爱所有人,更爱少数人</subtitle>
+    <logo>http://p1.music.126.net/eqFT_tSXob5r3E8LHtQVmg==/109951169774542338.jpg?param=180y180</logo>
+    <icon>https://valaxy.site/favicon.svg</icon>
+    <rights>CC BY-NC-SA 4.0 2026 © 朱英豪</rights>
+    <entry>
+        <title type="html"><![CDATA[面砸了的面试题]]></title>
+        <id>https://valaxy.site/posts/hello-valaxy</id>
+        <link href="https://valaxy.site/posts/hello-valaxy"/>
+        <updated>2025-03-10T00:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2>如何解决微信小程序自定义tabbar图标闪烁问题?</h2>
+<p>不能。<br>
+从微信小程序的多 WebView 架构来看，页面切换会导致组件重新挂载，因此普通自定义 TabBar 天然存在闪烁风险。</p>
+<p>可以</p>
+<br/><p>访问 <a href="https://valaxy.site/posts/hello-valaxy" target="_blank">https://valaxy.site/posts/hello-valaxy</a> 阅读全文。</p>]]></content>
+        <author>
+            <name>朱英豪</name>
+            <email>i@valaxy.site</email>
+            <uri>https://valaxy.site</uri>
+        </author>
+        <published>2025-03-10T00:00:00.000Z</published>
+    </entry>
+</feed>
