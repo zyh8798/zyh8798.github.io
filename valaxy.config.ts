@@ -24,6 +24,32 @@ export default defineValaxyConfig<UserThemeConfig>({
   theme: 'yun',
 
   vite: {
+    plugins: [
+      {
+        name: 'valaxy-markdown-refresh',
+        apply: 'serve',
+        configResolved(config) {
+          const watch = config.server.watch
+          if (watch && Array.isArray(watch.ignored)) {
+            // Valaxy 0.22.13's extra watch patterns block page updates on Windows.
+            watch.ignored = watch.ignored.filter(pattern =>
+              typeof pattern !== 'string'
+              || (!pattern.endsWith('/**.md') && !(pattern.startsWith('!') && pattern.includes('/valaxy-theme-yun/'))),
+            )
+          }
+        },
+        handleHotUpdate: {
+          order: 'post',
+          handler({ file, server }) {
+            if (file.endsWith('.md') && file.includes('/pages/')) {
+              // Valaxy's component update can leave the routed Markdown body stale.
+              server.hot.send({ type: 'full-reload' })
+              return []
+            }
+          },
+        },
+      },
+    ],
     server: {
       watch: {
         usePolling: true,
