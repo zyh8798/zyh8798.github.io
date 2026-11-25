@@ -33,34 +33,53 @@ pages.json 里设 tabBar.custom: true → 框架自动读取 src/custom-tab-bar/
 你只需要把组件写好放在 custom-tab-bar/index.vue，剩下的事框架帮你干了。
 
 
-## 函数传参是值传递还是引用传递
-引用地址拷贝副本传递，JavaScript 只有值传递，不存在真正意义上的——引用传递。  
-基本类型传递的是值本身；  
-对象传递的是对象引用（内存地址）的副本，因此修改对象属性会影响原对象，但重新赋值不会影响外部变量;   
+## 函数传参：值传递与引用传递
+
+### 1. JavaScript 的参数传递机制
+
+JavaScript 采用**值传递（Pass-by-Value）**，不存在真正意义上的引用传递（Pass-by-Reference）。
+
+* **基本类型**：传递的是基本类型值的副本。
+* **对象类型**：传递的是对象引用值的副本。形参和实参可以通过各自保存的引用访问同一个对象。
+
+### 2. 修改对象属性
 
 ```js
 function change(obj) {
-  obj.name = "张三"
+  obj.name = "张三";
 }
-const user = {
-  name: "李四"
-}
-change(user)
-console.log(user.name) // 张三, 由于修改的同一份地址+修改同一个属性所以是张三
+
+const user = { name: "李四" };
+
+change(user);
+
+console.log(user.name); // "张三"
 ```
+
+原因：`obj` 和 `user` 保存的引用指向同一个对象。通过 `obj` 修改对象属性，会影响该对象，因此可以通过 `user` 观察到修改结果。
+
+### 3. 给形参重新赋值
 
 ```js
 function change(obj) {
-  obj = {
-    name: "张三"
-  }
+  obj = { name: "张三" };
 }
-const user = {
-  name: "李四"
-}
-change(user)
-console.log(user.name) // 把user赋值给obj也是一个引用地址传递的动作,obj又弄了个新的地址所以是李四
+
+const user = { name: "李四" };
+
+change(user);
+
+console.log(user.name); // "李四"
 ```
+
+原因：给 `obj` 重新赋值，只会改变局部变量 `obj` 保存的引用，不会改变外部变量 `user` 保存的引用。
+
+### 4. 核心结论
+
+* 修改对象属性：可能影响外部通过其他引用访问该对象时看到的结果。
+* 给形参重新赋值：不会改变外部实参变量本身保存的值或引用。
+* 对象参数仍然是值传递，传递的值是对象引用值的副本。
+
 
 ## 深拷贝遇到嵌套对象怎么解决
 深拷贝处理普通嵌套对象时可以通过递归实现。
@@ -1449,26 +1468,27 @@ Renderer Process
 
 Chrome采用多进程架构，每个页面通常对应一个 Renderer Process。Renderer Process 内部包含 Main Thread、Compositor Thread、Raster Thread 等线程。Main Thread 负责 JS 执行和渲染管线中的 DOM、CSSOM、Layout、Paint；Compositor Thread 负责 Composite；Raster Thread 负责栅格化。Network Process 负责网络请求，GPU Process 负责图层合成和 GPU 加速。
 
-##  Tree Shaking 原理
+## Tree Shaking 原理
 
-为什么：
+Tree Shaking 的本质是：**删除未使用的代码（Dead Code Elimination）**。
 
-ESM支持
+### 为什么依赖 ESM？
 
-CommonJS不支持
+因为 ESM 的 `import/export` 是静态语法（Static Analysis）。
 
-## 为什么 ESM 能 Tree Shaking？
+构建工具（Webpack/Rollup）在编译阶段就能确定：
 
-为什么：
+- 导入了哪些模块
+- 使用了哪些导出
+- 哪些导出没有被使用
 
-import
+因此可以安全地删除未使用的代码。
 
-可以。
+### 为什么 CommonJS 不支持？
 
-require
+因为 `require` 是运行时加载（Runtime）。
 
-不行。
-
+模块路径、导入结果都可能是动态的，构建工具无法在编译阶段准确分析依赖关系，因此无法像 ESM 一样进行 Tree Shaking。
 ## Rollup 和 Webpack 有什么区别？
 ## diff 算法
 ## key 为什么不能用 index

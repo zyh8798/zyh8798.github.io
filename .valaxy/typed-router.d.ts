@@ -28,6 +28,8 @@ declare module 'vue-router/auto-routes' {
     '/page/[page]': RouteRecordInfo<'/page/[page]', '/page/:page', { page: ParamValue<true> }, { page: ParamValue<false> }>,
     '/posts/': RouteRecordInfo<'/posts/', '/posts', Record<never, never>, Record<never, never>>,
     '/posts/hello-valaxy': RouteRecordInfo<'/posts/hello-valaxy', '/posts/hello-valaxy', Record<never, never>, Record<never, never>>,
+    '/reactNote_shh/': RouteRecordInfo<'/reactNote_shh/', '/reactNote_shh', Record<never, never>, Record<never, never>>,
+    '/reactNote_zyh/': RouteRecordInfo<'/reactNote_zyh/', '/reactNote_zyh', Record<never, never>, Record<never, never>>,
     '/resume/': RouteRecordInfo<'/resume/', '/resume', Record<never, never>, Record<never, never>>,
     '/tags/': RouteRecordInfo<'/tags/', '/tags', Record<never, never>, Record<never, never>>,
   }
