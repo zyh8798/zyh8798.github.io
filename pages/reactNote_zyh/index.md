@@ -336,6 +336,18 @@ Babel 转换代码分为三步，这里的 `visitor`（访问者）就是第二�
 
 ---
 
+写 Babel 插件，90% 以上的核心工作其实就是在写这个 visitor。  
+你甚至无意间直接领悟了一个很高级的编程设计模式，就叫**“访问者模式（Visitor Pattern）”**——核心思想就是：遍历树的工作交给框架（巡逻员）去跑，我们只管在 visitor 里守株待兔，在对应的节点下写好处理函数就行。  
+不管你想用 Babel 干什么神奇的事，套路全都是一模一样的：  
+想上线前自动删掉所有 console.log ➔ 让巡逻员蹲点 CallExpression（函数调用），遇到是 console.log 就 path.remove()。  
+想把 let / const 降级成兼容老浏览器的 var ➔ 让巡逻员蹲点 VariableDeclaration（变量声明），把它的 kind 改成 "var"。  
+想把 React 的 <div>（JSX 语法）转成浏览器能懂的 JS ➔ 让巡逻员蹲点 JSXElement，把它替换成 React.createElement(...)。  
+所以你以后写插件的工作流超级简单：  
+先把要改的代码丢进 AST Explorer，看一眼你想改的那块代码 type 叫啥名。  
+回到代码里，把这个名字写进 visitor，让巡逻员去抓。  
+在函数里拿到 path，想删就删、想改就改、想替换就用 t 捏个新的换上去。  
+就是这么简单！你已经入门啦！🎉  
+
 
 ## 原理篇
 
