@@ -280,7 +280,71 @@ const result = Babel.transform(file, {
 
 console.log(result.code)
 ```
+
+```js
+// 练习插件,删除所有console.log
+// 输入 test3.js
+let a = 1;
+console.log(a);
+let b = 2;
+console.log(b);
+let c = 3
+console.log(c);
+
+console.dir('111')
+let fn = () => {
+    let d = a + b + c
+    console.log(a, b, c);
+    console.warn('666');
+}
+
+// 插件代码 index5.js
+import { transformAsync } from '@babel/core'
+import fs from 'node:fs'
+
+const file = fs.readFileSync('./test3.js', 'utf-8')
+
+const clearConsoleFunction = ({ types: t }) => {
+    return {
+        name: 'babel-clearConsole-functon',
+        visitor: {
+            CallExpression(path) {
+                // console.log('函数调用了');
+                // console.log(path.node);
+                // console.log(Object.keys(path.node));
+                // console.log(path.node.callee.object?.name);
+                // console.log(Object.keys(path.node.callee.object.name));
+
+                if (path.node.callee.object?.name === 'console' && path.node.callee.property?.name === 'log') {
+                    console.log('发现普通的console.log了');
+                    path.remove()
+                }
+            }
+        }
+    }
+}
+const res = await transformAsync(file, {
+    plugins: [clearConsoleFunction]
+})
+
+console.log(res.code);
+
+// 输出
+'发现普通的console.log了'
+'发现普通的console.log了'
+'发现普通的console.log了'
+'发现普通的console.log了'
+let a = 1;
+let b = 2;
+let c = 3;
+console.dir('111');
+let fn = () => {
+  let d = a + b + c;
+  console.warn('666');
+};
+```
 > **一句话总口诀：`visitor` 负责抓 ➔ `t` 负责造 ➔ `path` 负责换**
+
 
 ---
 
@@ -341,7 +405,7 @@ Babel 转换代码分为三步，这里的 `visitor`（访问者）就是第二�
 不管你想用 Babel 干什么神奇的事，套路全都是一模一样的：  
 想上线前自动删掉所有 console.log ➔ 让巡逻员蹲点 CallExpression（函数调用），遇到是 console.log 就 path.remove()。  
 想把 let / const 降级成兼容老浏览器的 var ➔ 让巡逻员蹲点 VariableDeclaration（变量声明），把它的 kind 改成 "var"。  
-想把 React 的 <div>（JSX 语法）转成浏览器能懂的 JS ➔ 让巡逻员蹲点 JSXElement，把它替换成 React.createElement(...)。  
+想把 React 的 `<div>`（JSX 语法）转成浏览器能懂的 JS ➔ 让巡逻员蹲点 JSXElement，把它替换成 React.createElement(...)。  
 所以你以后写插件的工作流超级简单：  
 先把要改的代码丢进 AST Explorer，看一眼你想改的那块代码 type 叫啥名。  
 回到代码里，把这个名字写进 visitor，让巡逻员去抓。  
