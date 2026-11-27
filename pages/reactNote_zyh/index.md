@@ -88,7 +88,7 @@ export default App
 
 ```
 ## 工具篇
-### babel
+### BABEL
 **什么是babel? Babel是一个JavaScript编译器,提供了JavaScript的编译过程,能够将原代码转化为目标代码**
 核心功能
 1.语法转换：将新版本的 JavaScript 语法转换为旧版本的语法  
@@ -345,9 +345,6 @@ let fn = () => {
 ```
 > **一句话总口诀：`visitor` 负责抓 ➔ `t` 负责造 ➔ `path` 负责换**
 
-
----
-
 ### 1. `t`（`@babel/types`）：造积木的模具，不是转换魔法
 
 很多人一开始会误以为 `t` 里面装的是“把 A 变成 B 的转换方法”，其实不是。`t` 是 Babel 送给你的 **AST 节点工具箱**，里面主要装了两类法宝：
@@ -413,6 +410,195 @@ Babel 转换代码分为三步，这里的 `visitor`（访问者）就是第二�
 就是这么简单！你已经入门啦！🎉  
 
 
+## SWC
+
+### 1. SWC 是什么？
+* **全称**：**Speedy Web Compiler**（极速 Web 编译器）
+* **底层语言**：**Rust**（单线程比 Babel 快约 20 倍，多核快约 70 倍）
+* **核心作用**：把现代 JS / TS / JSX 语法降级转换成兼容代码 + 模块转换 + **自带代码压缩**（同时干了 Babel + Terser 的活）。
+* ⚠️ **注意**：SWC 只管“翻译”不管“类型检查”（就像它直接把 TS 的 `: string` 擦掉，不会帮你报类型错误）。
+
+---
+
+### 2. 拆解基础代码里的配置项
+
+```javascript
+swc.transform(file, {
+    filename: 'input.js', // 1. 给这段代码字符串起个“假名字”
+    sourceMaps: true,     // 2. 是否生成“代码地图”
+    isModule: false,      // 3. 当成普通脚本还是模块来解析
+    jsc: {                // 4. JavaScript Compiler（核心编译配置大管家）
+        parser: {         // 5. 解析器：决定“怎么看懂”你的源码
+            syntax: 'ecmascript'
+        },
+        transform: {}     // 6. 转换器：决定“怎么改造”源码（如 JSX、装饰器）
+    }
+}).then(output => {
+    console.log(output.code); // 编译后的新代码
+    console.log(output.map);  // 生成的 Source Map 地图（用于浏览器调试定位报错）
+})
+```
+
+### 逐个白话解释：
+1. **`filename`**：只是给已经读进来的代码字符串贴个文件名标签（**不是**让 SWC 去硬盘找这个文件）。作用是：报错时方便提示哪行出错，以及生成 Source Map 时记录原文件名。
+2. **`sourceMaps`**：是否开启调试地图。设为 `true`，`output.map` 才会有内容，方便浏览器把编译后的代码报错位置映射回你原来的源码行号。
+3. **`isModule`**：告诉 SWC 这段代码是不是 ES 模块（有没有 `import` / `export`）。
+   * `false`：普通脚本模式（遇到 `import` 会报错）。
+   * `true`：ES 模块模式。
+   * `'unknown'`：让 SWC 自己扫一眼代码自动判断（实战推荐）。
+4. **`jsc`**：**JS Compiler** 的缩写，SWC 最核心的配置全塞在它里面。
+5. **`jsc.parser`**：对应编译第一步（源码 ➔ AST 树），告诉 SWC 你的源码是用啥语法写的。
+6. **`jsc.transform`**：对应编译第二步（改造 AST 树），配置 React JSX、装饰器等特殊语法怎么转。
+
+---
+
+### 3. 实战高频常用配置清单（查表用）
+
+平时写项目（或者配 `.swcrc` 文件）最常往配置里加的就是下面这几块：
+
+#### ① 支持 TypeScript / JSX / 装饰器（在 `jsc.parser` 里配）
+```javascript
+jsc: {
+    parser: {
+        syntax: 'typescript', // 'ecmascript'（默认，普通JS） | 'typescript'（TS文件）
+        jsx: true,            // 如果 syntax 是 ecmascript 且写了 JSX，开这个
+        tsx: true,            // 如果 syntax 是 typescript 且写了 JSX，开这个
+        decorators: true      // 是否允许 @装饰器 语法（比如写 NestJS 时需要）
+    }
+}
+```
+
+#### ② 指定降级到哪个 JS 版本（`jsc.target`）
+```javascript
+jsc: {
+    // 默认其实是 'es5'（会把箭头函数、const/let 全转成老式 function 和 var）
+    // 常用值：'es5' | 'es2015' (即ES6) | 'es2020' | 'es2022'
+    target: 'es2015'
+}
+```
+> 💡 **高阶替代方案 `env`**：如果你不想写死 `es5`，想跟 Babel 的 `@babel/preset-env` 一样**“按浏览器版本自动降级 + 自动打补丁（Polyfill）”**，可以在最外层配 `env`（注意：`env` 和 `jsc.target` 不能同时写）：
+> ```javascript
+> env: {
+>     targets: 'Chrome >= 79' // 或者写 { chrome: '79' }
+> }
+> ```
+
+#### ③ React JSX 转换（在 `jsc.transform` 里配）
+```javascript
+jsc: {
+    transform: {
+        react: {
+            // 'automatic'：React 17+ 新写法，自动引入 jsx 运行时，不用每个文件手写 import React
+            // 'classic'：老写法，会转成 React.createElement(...)
+            runtime: 'automatic'
+        }
+    }
+}
+```
+
+#### ④ 指定输出什么模块化语法（最外层 `module`）
+比如你源码写了 `import`，想编译给老版 Node.js 用（转成 `require`）：
+```javascript
+module: {
+    // 'es6'（保留 import/export） | 'commonjs'（转成 require/module.exports） | 'umd'
+    type: 'commonjs'
+}
+```
+
+#### ⑤ 一键开启代码压缩混淆（最外层 `minify`）
+SWC 的拿手好戏！Babel 做不到压缩，SWC 一行配置搞定：
+```javascript
+minify: true, // 开启压缩（去空格、换行，缩短变量名，干掉死代码）
+```
+
+---
+
+### 4. 终极合体模板（React + TypeScript + 压缩）
+把上面的常用配置拼起来，一个现代前端项目的基础 SWC 配置就长这样：
+
+```javascript
+swc.transform(file, {
+    filename: 'App.tsx',
+    sourceMaps: true,
+    isModule: true,
+    minify: true, // 顺手把代码压缩了
+    module: {
+        type: 'es6'
+    },
+    jsc: {
+        target: 'es2020', // 降级到 ES2020
+        parser: {
+            syntax: 'typescript', // 解析 TS
+            tsx: true             // 支持 TSX
+        },
+        transform: {
+            react: {
+                runtime: 'automatic' 
+            }
+        }
+    }
+})
+```
+
+### `jsc.transform`：特殊语法与框架专项改造
+
+> **核心定位**：`parser` 只负责“**认得**”特殊语法（不报语法错）；`transform` 才负责真正把这些特殊语法或框架黑魔法“**改造**”成普通 JS 代码。
+
+#### 1. React 自动 JSX 转换（`react.runtime`）
+* **痛点**：在老模式（`classic`）下，直接写 `let title = <h1>标题</h1>` 会被编译成 `React.createElement(...)`，如果不显式在文件顶部写 `import React from 'react'` 就会报错。
+* **解决**：设置 `runtime: 'automatic'`（React 17+），让 SWC **自动**在文件顶部引入 JSX 编译函数（`_jsx`），以后写组件再也不用每页手写 `import React` 了。
+
+#### 2. React 开发热更新（`react.refresh`）
+* 同样写在 `transform.react` 下，开发环境中框架通常会加上 `refresh: true`。
+* **作用**：开启 React 热更新（Fast Refresh）。写页面改了个按钮颜色保存后，浏览器不用整个刷新，局部就能瞬间变过来。
+
+```javascript
+jsc: {
+    transform: {
+        react: {
+            runtime: 'automatic', // React 17+ 自动 JSX 转换
+            refresh: true         // 开启开发环境热更新
+        }
+    }
+}
+```
+
+#### 3. 装饰器语法改造（`legacyDecorator` / `decoratorMetadata`）
+* **场景**：写 **NestJS**（很火的 TS 后端框架）时，代码里到处都是 `@Controller()`、`@Inject()` 这种 `@` 开头的“装饰器”语法。
+* **两步配合**：
+  1. **第一步（`parser`）**：开启 `decorators: true`，让 SWC 认识 `@` 不报错。
+  2. **第二步（`transform`）**：开启 `legacyDecorator: true` 和 `decoratorMetadata: true`，SWC 才会真正把这些 `@` 语法改造成 Node.js 能跑通的普通函数和反射代码。
+
+```javascript
+jsc: {
+    parser: {
+        syntax: 'typescript',
+        decorators: true          // 1. 先让 SWC 认得 @
+    },
+    transform: {
+        legacyDecorator: true,    // 2. 改造装饰器语法
+        decoratorMetadata: true   // 3. 保留类型反射元数据（NestJS 必备）
+    }
+}
+```
+
+#### 4. 编译期全局变量替换（`optimizer.globals`）
+* **场景**：在代码里写了全局调试开关，例如：`if (__DEBUG__) { console.log('调试中') }`。
+* **作用**：在 `transform.optimizer.globals.vars` 里配好把 `__DEBUG__` 替换成 `'false'`，SWC 打包时就会强行把代码里的 `__DEBUG__` 变成 `false`（配合 `minify` 压缩还能把整个 `if` 死代码直接删干净）——干的就是 Webpack 里 **`DefinePlugin`** 插件的活！
+
+```javascript
+jsc: {
+    transform: {
+        optimizer: {
+            globals: {
+                vars: {
+                    __DEBUG__: 'false' // 编译期把 __DEBUG__ 替换成 false
+                }
+            }
+        }
+    }
+}
+```
 ## 原理篇
 
 ## HOOKS
