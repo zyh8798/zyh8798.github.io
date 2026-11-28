@@ -1,0 +1,1 @@
+[{"title":"面砸了的面试题","tags":["面试题"],"categories":["面试题"],"author":"朱英豪","excerpt":"\n## 如何解决微信小程序自定义tabbar图标闪烁问题?\n不能。  \n从微信小程序的多 WebView 架构来看，页面切换会导致组件重新挂载，因此普通自定义 TabBar 天然存在闪烁风险。\n\n可以","link":"/posts/hello-valaxy"}]
