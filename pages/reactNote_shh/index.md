@@ -120,7 +120,9 @@ return (
 )
 ```
 
-## 原理篇babel
+## 原理篇
+
+### babel
 
 babel 是 JavaScript 的转译器，帮助你将源码转译成所需要的源码。
 它的工作就是解析代码（Parse），进行转换（Transform），最后生成（Generate）。
@@ -287,6 +289,112 @@ const result = babel.transform(code, {
 })
 
 console.log(result.code)
+```
+
+### SWC
+
+SWC对比babel更开箱即用，同样的代码方面的转译，转译速度更快，编写的代码更少，配置也更简单，还能够打包
+为什么SWC会这么快？因为使用的是rust编写的，原生支持多线程，而babel是js编写的受限于v8引擎所以会更慢
+虽然swc有打包功能，但是由于功能并不完善所以还是以转译为主
+SWC的代码转译
+
+```js
+// ES6转ES5
+import swc from '@swc/core'
+
+const result = swc.transformFileSync('./test.js',{
+    jsc: {
+        parser: {
+            syntax: 'ecmascript'
+        },
+        target: 'es5'
+    }
+})
+
+console.log(result.code)
+```
+
+转译react代码
+
+```js
+import swc from '@swc/core'
+
+const result = swc.transformFileSync('./app.jsx',{
+    jsc: {
+        parser: {
+            syntax: 'ecmascript',
+            jsx: true
+        },
+        target: 'es5'
+    }
+})
+
+console.log(result.code)
+```
+
+swc配置
+
+```json
+{
+  "jsc": {
+    "parser": {
+      "syntax": "typescript", // 解析 TypeScript 语法（对应普通 JS 的 "ecmascript"）
+      "tsx": true, // 是否启用 TSX（.tsx 文件必须为 true，纯 .ts 文件设为 false）
+      "decorators": true, // 是否支持装饰器语法（如 NestJS、MobX 常见）
+      "dynamicImport": true // 支持动态导入
+    },
+    "transform": {
+      "react": {
+        "runtime": "automatic" // 现代 React 推荐 automatic 模式
+      },
+      "legacyDecorator": true, // 配合传统装饰器（experimentalDecorators）使用
+      "decoratorMetadata": true // 生成装饰器元数据（依赖反射机制时开启）
+    },
+    "target": "es2020", // 编译后的 JS 目标版本
+    "externalHelpers": false, // 是否把辅助函数抽离到 @swc/helpers（设为 true 配合安装 @swc/helpers 可减小体积）
+    "baseUrl": ".", // 路径解析基准目录，常配合 paths 做路径别名
+    "paths": {
+      "@/*": ["src/*"] // 路径映射示例，让 @/ 指向 src/
+    }
+  },
+  "module": {
+    "type": "es6", // 现代前端或 ESM 项目常用 "es6"，Node 脚本常用 "commonjs"
+    "strict": true // 生成严格模式代码
+  },
+  "minify": false,
+  "sourceMaps": true
+}
+```
+
+SWC打包
+**!!!注意SWC打包了解即可，SWC后续会完全废弃掉这个功能，打包使用其他工具比如vite，webpack**
+
+安装swc/cli
+
+```powershell
+npm install -D @swc/core @swc/cli
+```
+
+移除package.json中的```"type": "module"```,因为 spack.config.js 配置文件不支持 ESM 写法（必须使用 CommonJS 的 require / module.exports）
+新建spack.config.js编写以下代码
+最后运行```bash npx spack```命令即可打包成功
+
+```js
+const { config } = require('@swc/core/spack')
+const path = require('path')
+
+// 打包了解即可，swc后续也不打算支持打包了
+module.exports = config({
+    // 文件入口
+    entry: {
+        web: path.join(__dirname, './test.js') //入口
+    },
+    // 文件出口
+    output: {
+        path: path.join(__dirname, './dist'), //出口
+        name: 'test.js'
+    }
+})
 ```
 
 ## React Router
